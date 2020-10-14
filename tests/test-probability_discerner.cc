@@ -46,4 +46,30 @@ TEST_CASE("Import Data Tests"){
   }
 }
 
+TEST_CASE("File Writing/ Reading Tests"){
+  probability_discerner digit;
+  digit.ImportData("data/trainingimages");
 
+  SECTION("Check If File Writing/Reading is consistent") {
+    digit.WriteModelToFile("data/datamodel.txt");
+    int num_elem = digit.num_training_images_;
+    std::map<int, map<Coordinate, std::tuple<int, int, int>>> data =
+        digit.data_set_;
+    map<int, map<Coordinate, std::tuple<double, double, double>>> prob =
+        digit.probability_set_;
+
+    probability_discerner new_digit;
+    new_digit.ImportModelFromFile("data/datamodel.txt");
+    REQUIRE(new_digit.num_training_images_ == num_elem);
+    REQUIRE(new_digit.data_set_ == data);
+    REQUIRE(new_digit.probability_set_ == prob);
+  }
+
+  SECTION("Check If reading/writing is successful"){
+
+    REQUIRE(digit.WriteModelToFile("../data/datamodel.txt"));
+    REQUIRE(digit.ImportModelFromFile("../data/datamodel.txt"));
+
+  }
+
+}
