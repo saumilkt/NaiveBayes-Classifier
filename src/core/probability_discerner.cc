@@ -1,6 +1,9 @@
 #include <core/probability_discerner.h>
+
+#include <fstream>
 #include <map>
 #include <tuple>
+
 #include "core/colors.h"
 
 namespace naivebayes {
@@ -198,6 +201,27 @@ void probability_discerner::CalculateProbabilities() {
   }
 }
 
+bool probability_discerner::WriteModelToFile(const std::string &file_path) {
+  //If the data_set is empty or there are 0 examples then a false is returned.
+  if (data_set_.empty() || num_training_images_ == 0) {
+    return false;
+  }
+
+  std::ofstream output_file;
+  output_file.open(file_path);
+
+  // First line in the file is number of training examples.
+  output_file << num_training_images_ << std::endl;
+
+  for (int digit = kFirstDigit; digit <= kLastDigit; digit++) {
+    // Each line after the first represents each coordinate's corresponding
+    // values in the given digit.
+    output_file << GetDigitString(digit) << std::endl;
+
+  }
+  output_file.close();
+  return true;
+}
 
 
 } // namespace naivebayes
