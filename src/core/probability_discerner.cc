@@ -223,5 +223,50 @@ bool probability_discerner::WriteModelToFile(const std::string &file_path) {
   return true;
 }
 
+bool probability_discerner::ImportModelFromFile(const std::string &file_path) {
+  // data_Set and prob_set are reset first.
+  InitializeProbabilitySet();
+  InitializeDataSet();
+
+  std::ifstream input_file(file_path);
+  std::string line;
+  // Same formatting as file writing is used for reading, and split method
+  // is used to achieve that.
+  std::getline(input_file, line);
+  num_training_images_ = std::stoi(line);
+  for (int digit = kFirstDigit; digit <= kLastDigit; digit++) {
+    std::getline(input_file, line);
+    std::vector<std::string> pairs = SplitString(line, coord_separator_);
+
+    for (int row = 0; row < kImageSize; row++) {
+      for (int col = 0; col < kImageSize; col++) {
+        std::string pixel_data = pairs[col + kImageSize * row];
+        std::vector<std::string> bwg_freq =
+            SplitString(pixel_data, pixel_separator_);
+        int num_white = std::stoi(bwg_freq[0]);
+        int num_gray = std::stoi(bwg_freq[1]);
+        int num_black = std::stoi(bwg_freq[2]);
+        Coordinate coord = std::make_pair(col, row);
+
+        for (int i = 0; i < num_white; i++) {
+          std::get<kWhiteIndex>(data_set_[digit][coord])++;
+        }
+
+        for (int i = 0; i < num_gray; i++) {
+          std::get<kGrayIndex>(data_set_[digit][coord])++;
+        }
+
+        for (int i = 0; i < num_black; i++) {
+          std::get<kBlackIndex>(data_set_[digit][coord])++;
+        }
+      }
+    }
+  }
+
+  // After the new data_set is implemented, probabilities are re-calculated.
+  CalculateProbabilities();
+  return true;
+}
+
 
 } // namespace naivebayes
