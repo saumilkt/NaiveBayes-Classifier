@@ -26,6 +26,24 @@ TEST_CASE("Import Data Tests"){
     }
     REQUIRE(num_white_pix_in00==5000);
   }
-
+  SECTION("Probabilities Valid Tests"){
+    for (int num = 0; num <= 9; num++) {
+      for(int i=0;i<28;i++){
+        for(int j=0;j<28;j++){
+          double prob_white =
+              std::get<0>(digit.probability_set_[num][std::make_pair(j,i)]);
+          double prob_gray =
+              std::get<1>(digit.probability_set_[num][std::make_pair(j,i)]);
+          double prob_gray =
+              std::get<2>(digit.probability_set_[num][std::make_pair(j,i)]);
+          bool isValidWhite = prob_white <= 1 && prob_white >= 0;
+          bool isValidBlackGray = prob_gray <= 1 && prob_gray >= 0;
+          bool isValidBlackGray = prob_black <= 1 && prob_black >= 0;
+          REQUIRE(isValidWhite && isValidGray && isValidBlack);
+        }
+      }
+    }
+  }
 }
+
 
