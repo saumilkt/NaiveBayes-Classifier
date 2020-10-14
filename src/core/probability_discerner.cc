@@ -116,6 +116,46 @@ void probability_discerner::ProcessInput(const int &user_choice){
   }
 }
 
+void probability_discerner::ImportData(const std::string &data_path,
+                                       const std::string &label_path) {
+  std::ifstream train_file(data_path);
+  std::string line;
+  std::ifstream label_file(label_path);
+  std::string label;
+
+  while (std::getline(label_file, label)) {
+
+    if (!(label_file >> label)) {
+      break;
+    }
+    // Loop ends when labels are finished.
+    // There are 28 lines in data file for each line in label file.
+    int label_ind = stoi(label);
+    // num_train_exmp increases by 1 with each loop.
+    num_training_images_++;
+    for (int row = 0; row < kImageSize; row++) {
+      std::getline(train_file, line);
+      for (int col = 0; col < kImageSize; col++) {
+        Coordinate coord = std::make_pair(col, row);
+        if (line.at(col) == Color::kGrayPixel) {
+          // The number of dark pixels at given coordinates is
+          // increased by one.
+          std::get<kGrayIndex>(data_set_[label_ind][coord])++;
+        } else if (line.at(col) == Color::kBlackPixel) {
+          std::get<kBlackIndex>(data_set_[label_ind][coord])++;
+        } else {
+          // The number of white pixels at given coordinates is
+          // increased by one.
+          std::get<kWhiteIndex>(data_set_[label_ind][coord])++;
+        }
+      }
+    }
+
+  }
+
+  CalculateProbabilities();
+}
+
 
 
 
