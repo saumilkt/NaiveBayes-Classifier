@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include <map>
+#include <sstream>
 #include <tuple>
 
 #include "core/colors.h"
@@ -268,5 +269,40 @@ bool probability_discerner::ImportModelFromFile(const std::string &file_path) {
   return true;
 }
 
+std::string probability_discerner::GetDigitString(const int &digit) {
+  std::string digit_string;
+  // Each coordinates pair values have a blank space between them and each
+  // tuple has a comma between them.
+  for (int row = 0; row < kImageSize; row++) {
+    for (int col = 0; col < kImageSize; col++) {
+      Coordinate coord = std::make_pair(col, row);
+      int num_white = std::get<kWhiteIndex>
+          (data_set_[digit][coord]);
+      int num_gray = std::get<kGrayIndex>
+          (data_set_[digit][coord]);
+      int num_black = std::get<kBlackIndex>
+          (data_set_[digit][coord]);
+      digit_string += std::to_string(num_white) + pixel_separator_ +
+                      std::to_string(num_gray) + pixel_separator_ +
+                      std::to_string(num_black) + coord_separator_;
+    }
+  }
+
+  // Last element in the string is removed because it's an extra.
+  digit_string.pop_back();
+  return digit_string;
+}
+
+std::vector<std::string> probability_discerner::SplitString(
+    const std::string &string,
+    const char &split_point) {
+  std::vector<std::string> strings;
+  std::stringstream ss(string);
+  std::string part;
+  while (getline(ss, part, split_point)) {
+    strings.push_back(part);
+  }
+  return strings;
+}
 
 } // namespace naivebayes
