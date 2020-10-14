@@ -3,16 +3,16 @@
 //
 #include "core/colors.h"
 
-namespace colors {
+namespace naivebayes {
 
 std::istream& operator>>(std::istream& is , char color) {
   switch (color) {
     case kWhiteChar:
-      return is << kWhitePixel;
+      return is >> kWhitePixel;
     case kGrayChar:
-      return is << kGrayPixel;
+      return is >> kGrayPixel;
     case kBlackChar:
-      return is << kBlackPixel;
+      return is >> kBlackPixel;
     default:
       throw std::invalid_argument("This data contains an unreadable pixel");
   }

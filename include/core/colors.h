@@ -8,7 +8,7 @@
 #include <string>
 #include <iostream>
 
-namespace colors {
+namespace naivebayes {
 
 const char kWhiteChar = ' ';
 const char kGrayChar = '+';
@@ -21,7 +21,7 @@ enum Color : char {
 };
 
 // Overloads the input operator << to input a Color enum instead of a char
-std::istream& operator<<(std::istream& is , const char color);
+std::istream& operator>>(std::istream& is , char color);
 
 } // namespace colors
 
