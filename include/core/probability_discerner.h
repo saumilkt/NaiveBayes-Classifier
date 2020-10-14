@@ -2,6 +2,7 @@
 #define SRC_PROBABILITY_DISCERNER_H
 
 
+#include <vector>
 #include <string>
 #include <map>
 #include <tuple>
@@ -68,7 +69,38 @@ class probability_discerner {
   // Returns a boolean that represents if the file reading was succesfull.
   bool ImportModelFromFile(const std::string &file_path);
 
+ private:
+  // method for handling the CLI interactions of the program
+  void CommandLineInterface();
 
+  // method for processing User input from command line
+  void ProcessInput(const int &user_choice);
+
+  // Initializes data_set_.
+  // Sets every value inside pairs to 0 by default.
+  void InitializeDataSet();
+
+  // Initializes probability_set_.
+  // Sets every value inside pairs to 0 by default.
+  void InitializeProbabilitySet();
+
+  // Calculates the probability of each pixel of each digit using data_set_.
+  // Calculates the probability of each pixel and each class and stores them.
+  void CalculateProbabilities();
+
+  // Converts the part of the data_set_ associated with a digit to a string.
+  // Takes an int representing a digit as the only parameter.
+  // Returns an std::string that represents data_set_[digit].
+  // Used to write a digit's requisite information to a new model
+  std::string GetDigitString(const int &digit);
+
+  // Splits a string into different strings by the given char.
+  // Basically is the .split() method in Java strings.
+  // Takes a string and where we want to split it as the parameters.
+  // Returns a vector containing the string split by the given char.
+  // Used when reading from a pre-existing model
+  std::vector<std::string> SplitString(const std::string &string,
+                                       const char &split_point);
 };
 
 
