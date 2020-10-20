@@ -37,7 +37,6 @@ const std::string kDefModelWriteReadPath = "../data/datamodel.txt";
 class probability_discerner {
  public:
   int num_training_images_;
-
   // Maps representing class probabilites, raw pixel data, and pixel
   // probabilities
   map<int, double> class_probabilities_;
@@ -53,9 +52,11 @@ class probability_discerner {
 
 
   // Stream operator overloads
-  friend std::istream& operator>>(std::istream& is, Image image);
+  // Overloads the input operator >> to input a Color enum instead of a char
+  friend std::istream& operator>>(std::istream& is, char color);
+  //Overloads the output operator << to help with
   friend std::ostream& operator<<(std::ostream& os,
-                                  map<Coordinate, tuple<int,int,int>>);
+                                  map<Coordinate, tuple<int,int,int>> digit);
 
   // Converts data from files to a model for naive bayes algorithm.
   // Takes 2 std::strings that represent the label and data files path.
@@ -74,6 +75,7 @@ class probability_discerner {
   bool ImportModelFromFile(const std::string &file_path);
 
  private:
+  int image_size_;
   // method for handling the CLI interactions of the program
   void CommandLineInterface();
 

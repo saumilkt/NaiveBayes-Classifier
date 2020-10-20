@@ -1,11 +1,11 @@
 #include <core/probability_discerner.h>
-
+#include "core/model_io.h"
 #include <fstream>
 #include <map>
 #include <sstream>
 #include <tuple>
+#include <iostream>
 
-#include "core/colors.h"
 
 namespace naivebayes {
 using std::tuple;
@@ -13,6 +13,7 @@ using std::map;
 
 probability_discerner::probability_discerner() {
   num_training_images_ = 0;
+  image_size_=0;
   InitializeProbabilitySet();
   InitializeDataSet();
 }
@@ -22,8 +23,8 @@ void probability_discerner::InitializeDataSet() {
   // for each digit, initialize each coordinate to zero tuple
   for (int digit = kFirstDigit; digit <= kLastDigit; digit++) {
     map<Coordinate, tuple<int, int, int>> numRepeatance;
-    for (int row = 0; row < kImageSize; row++) {
-      for (int col = 0; col < kImageSize; col++) {
+    for (int row = 0; row < image_size_; row++) {
+      for (int col = 0; col < image_size_; col++) {
         // Adds a pair with two zeroes for each key in the map.
         // First value in each pair represents number of white pixels.
         // Second value in the pair is the number of grey or dark pixels
@@ -41,8 +42,8 @@ void probability_discerner::InitializeProbabilitySet() {
   // for each digit, intitialize each image coordinate to 0 tuple
   for (int digit = kFirstDigit; digit <= kLastDigit; digit++) {
     map<Coordinate, tuple<double, double, double>> numRepeatance;
-    for (int row = 0; row < kImageSize; row++) {
-      for (int col = 0; col < kImageSize; col++) {
+    for (int row = 0; row < image_size_; row++) {
+      for (int col = 0; col < image_size_; col++) {
         // Adds a pair with two zeroes for each key in the map.
         numRepeatance[std::make_pair(col, row)] =
             std::make_tuple(0, 0, 0);
@@ -73,53 +74,6 @@ void probability_discerner::CommandLineInterface(){
   }
 }
 
-void probability_discerner::ProcessInput(const int &user_choice){
-  switch (user_choice) {
-    case 0:{
-      std::cout << "Please provide a file path for data" << std::endl;
-      std::string data_path;
-      getline(std::cin, data_path);
-      if (data_path == ""){
-        //Default values are used when value entered is empty.
-        ImportData(kDefTrainDataPath,kDefTrainLabelPath);
-      } else {
-        std::cout << "Please provide a file path"
-                     " for training labels" << std::endl;
-        std::string label_path;
-        getline(std::cin, label_path);
-        ImportData(data_path, label_path);
-      }
-      return;
-
-    } case 1:{
-      std::cout << "Please provide a file path to write a model " << std::endl;
-      std::string file_path;
-      getline(std::cin, file_path);
-      if(file_path == ""){
-        //Default value is used when value entered is empty.
-        WriteModelToFile(kDefModelWriteReadPath);
-      } else {
-        WriteModelToFile(file_path);
-      }
-      return;
-
-    } case 2:{
-      std::cout << "Please provide a path to read a model from " << std::endl;
-      std::string file_path;
-      getline(std::cin, file_path);
-      if(file_path == ""){
-        //Default value is used when value entered is empty.
-        ImportModelFromFile(kDefModelWriteReadPath);
-      } else {
-        ImportModelFromFile(file_path);
-      }
-      return;
-    } default:
-      std::cout << "Please enter a valid input"<< std::endl;
-      return;
-  }
-}
-
 void probability_discerner::CalculateProbabilities() {
   for (int digit = kFirstDigit; digit <= kLastDigit; digit++) {
     // Addition of elements of the tuple in any coordinate
@@ -135,8 +89,8 @@ void probability_discerner::CalculateProbabilities() {
                         (num_training_images_ + 2 * kClassifyConst);
     class_probabilities_[digit] = prob_digit;
 
-    for (int row = 0; row < kImageSize; row++) {
-      for (int col = 0; col < kImageSize; col++) {
+    for (int row = 0; row < image_size_; row++) {
+      for (int col = 0; col < image_size_; col++) {
         Coordinate coord = std::make_pair(col, row);
         int num_white = std::get<kWhiteIndex>(data_set_[digit][coord]);
         int num_gray = std::get<kGrayIndex>(data_set_[digit][coord]);
@@ -166,8 +120,8 @@ std::string probability_discerner::GetDigitString(const int &digit) {
   std::string digit_string;
   // Each coordinates pair values have a blank space between them and each
   // tuple has a comma between them.
-  for (int row = 0; row < kImageSize; row++) {
-    for (int col = 0; col < kImageSize; col++) {
+  for (int row = 0; row < image_size_; row++) {
+    for (int col = 0; col < image_size_; col++) {
       Coordinate coord = std::make_pair(col, row);
       int num_white = std::get<kWhiteIndex>
           (data_set_[digit][coord]);
@@ -197,5 +151,4 @@ std::vector<std::string> probability_discerner::SplitString(
   }
   return strings;
 }
-
 } // namespace naivebayes
