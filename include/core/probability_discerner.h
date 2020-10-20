@@ -1,14 +1,16 @@
 #ifndef SRC_PROBABILITY_DISCERNER_H
 #define SRC_PROBABILITY_DISCERNER_H
 
-
-#include <vector>
-#include <string>
 #include <map>
+#include <string>
 #include <tuple>
+#include <vector>
+
+#include "model_io.h"
 
 namespace naivebayes {
 using std::map;
+using std::tuple;
 
 typedef std::pair<int, int> Coordinate;
 
@@ -39,9 +41,8 @@ class probability_discerner {
   // Maps representing class probabilites, raw pixel data, and pixel
   // probabilities
   map<int, double> class_probabilities_;
-  map<int, map<Coordinate, std::tuple<int, int, int>>> data_set_;
-  map<int, map<Coordinate,
-      std::tuple<double, double, double>>> probability_set_;
+  map<int, map<Coordinate, tuple<int, int, int>>> data_set_;
+  map<int, map<Coordinate, tuple<double, double, double>>> probability_set_;
 
   // formatting for models
   const char pixel_separator_ = ' ';
@@ -51,7 +52,10 @@ class probability_discerner {
   probability_discerner();
 
 
-  // These methods are set to public for testing.
+  // Stream operator overloads
+  friend std::istream& operator>>(std::istream& is, Image image);
+  friend std::ostream& operator<<(std::ostream& os,
+                                  map<Coordinate, tuple<int,int,int>>);
 
   // Converts data from files to a model for naive bayes algorithm.
   // Takes 2 std::strings that represent the label and data files path.
