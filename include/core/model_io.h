@@ -13,6 +13,16 @@ struct Image {
   vector<vector<char>> pixelArray;
 };
 
+const char kWhiteChar = ' ';
+const char kGrayChar = '+';
+const char kBlackChar = '#';
+
+enum Color : char {
+  kWhitePixel = kWhiteChar,
+  kGrayPixel = kGrayChar,
+  kBlackPixel = kWhiteChar,
+};
+
 /*
  * No new methods are declared here, the source file is implementing file
  * read/write methods declared in probability_discerner.h

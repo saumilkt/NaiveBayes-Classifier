@@ -4,7 +4,7 @@
 
 #include "core/model_io.h"
 #include <core/probability_discerner.h>
-#include "core/colors.h"
+
 #include <fstream>
 
 namespace naivebayes {
@@ -25,9 +25,9 @@ void probability_discerner::ImportData(const std::string &data_path,
     int label_ind = stoi(label);
     // num_train_exmp increases by 1 with each loop.
     num_training_images_++;
-    for (int row = 0; row < kImageSize; row++) {
+    for (int row = 0; row < image_size_; row++) {
       std::getline(train_file, line);
-      for (int col = 0; col < kImageSize; col++) {
+      for (int col = 0; col < image_size_; col++) {
         Coordinate coord = std::make_pair(col, row);
         if (line.at(col) == Color::kGrayPixel) {
           // The number of dark pixels at given coordinates is
@@ -85,9 +85,9 @@ bool probability_discerner::ImportModelFromFile(const std::string &file_path) {
     std::getline(input_file, line);
     std::vector<std::string> pairs = SplitString(line, coord_separator_);
 
-    for (int row = 0; row < kImageSize; row++) {
-      for (int col = 0; col < kImageSize; col++) {
-        std::string pixel_data = pairs[col + kImageSize * row];
+    for (int row = 0; row < image_size_; row++) {
+      for (int col = 0; col < image_size_; col++) {
+        std::string pixel_data = pairs[col + image_size_ * row];
         std::vector<std::string> bwg_freq =
             SplitString(pixel_data, pixel_separator_);
         int num_white = std::stoi(bwg_freq[0]);
@@ -105,6 +105,19 @@ bool probability_discerner::ImportModelFromFile(const std::string &file_path) {
   // After the new data_set is implemented, probabilities are re-calculated.
   CalculateProbabilities();
   return true;
+}
+
+std::istream& operator>>(std::istream& is , char color) {
+  switch (color) {
+    case kWhiteChar:
+      return is >> kWhitePixel;
+    case kGrayChar:
+      return is >> kGrayPixel;
+    case kBlackChar:
+      return is >> kBlackPixel;
+    default:
+      throw std::invalid_argument("This data contains an unreadable pixel");
+  }
 }
 
 }
