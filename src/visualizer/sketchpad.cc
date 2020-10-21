@@ -60,10 +60,9 @@ void Sketchpad::HandleBrush(const vec2& brush_screen_coords) {
             pixel_top_left + vec2(pixel_side_length_, pixel_side_length_);
         ci::Rectf pixel_bounding_box(pixel_top_left, pixel_bottom_right);
         // Adding pixel bounds to list of shaded pixels
-        shaded_pixels.push_back(
-            std::make_tuple(pixel_top_left,pixel_bottom_right));
+        shaded_pixels.emplace_back(pixel_top_left,pixel_bottom_right);
+        // shading the image
         ci::gl::drawSolidRect(pixel_bounding_box);
-
         ci::gl::color(ci::Color("black"));
         ci::gl::drawStrokedRect(pixel_bounding_box);
       }
