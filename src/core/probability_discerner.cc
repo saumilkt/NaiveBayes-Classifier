@@ -54,26 +54,6 @@ void probability_discerner::InitializeProbabilitySet() {
 
 }
 
-void probability_discerner::CommandLineInterface(){
-  while (true) {
-    std::cout<< "Please Enter 0 to read training data to create a model, "
-                "1 to write an existing model to a file, 2 to read an existing "
-                "model from a file, or 3 to end" << std::endl;
-    int user_choice;
-    try {
-      std::string input;
-      getline(std::cin, input);
-      user_choice = std::stoi(input);
-      if(user_choice == 3) break;
-    } catch (std::invalid_argument& e) {
-      std::cout << "Please give a valid input" << std::endl;
-      continue;
-    }
-
-    ProcessInput(user_choice);
-  }
-}
-
 void probability_discerner::CalculateProbabilities() {
   for (int digit = kFirstDigit; digit <= kLastDigit; digit++) {
     // Addition of elements of the tuple in any coordinate
@@ -114,30 +94,6 @@ void probability_discerner::CalculateProbabilities() {
       }
     }
   }
-}
-
-std::string probability_discerner::GetDigitString(const int &digit) {
-  std::string digit_string;
-  // Each coordinates pair values have a blank space between them and each
-  // tuple has a comma between them.
-  for (int row = 0; row < image_size_; row++) {
-    for (int col = 0; col < image_size_; col++) {
-      Coordinate coord = std::make_pair(col, row);
-      int num_white = std::get<kWhiteIndex>
-          (data_set_[digit][coord]);
-      int num_gray = std::get<kGrayIndex>
-          (data_set_[digit][coord]);
-      int num_black = std::get<kBlackIndex>
-          (data_set_[digit][coord]);
-      digit_string += std::to_string(num_white) + pixel_separator_ +
-                      std::to_string(num_gray) + pixel_separator_ +
-                      std::to_string(num_black) + coord_separator_;
-    }
-  }
-
-  // Last element in the string is removed because it's an extra.
-  digit_string.pop_back();
-  return digit_string;
 }
 
 std::vector<std::string> probability_discerner::SplitString(

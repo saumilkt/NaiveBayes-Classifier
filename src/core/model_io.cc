@@ -21,7 +21,7 @@ std::istream& operator>>(std::istream& is , char color) {
   }
 }
 
-std::ofstream& operator<<(std::ofstream& os,
+std::ostream& operator<<(std::ostream& os,
                           const std::tuple<int,int,int>& dataValue) {
   os << std::get<kBlackIndex>(dataValue);
   os << kPixelSeparator;
