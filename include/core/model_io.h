@@ -5,7 +5,6 @@
 #ifndef SRC_MODEL_IO_H
 #define SRC_MODEL_IO_H
 
-#include <vector>
 namespace naivebayes {
 
 const char kWhiteChar = ' ';
@@ -20,7 +19,7 @@ enum Color : char {
 
 /*
  * No new methods are declared here, the source file is implementing file
- * read/write methods declared in probability_discerner.h
+ * read/write methods declared in model_analyze.h
  */
 } //namespace naivebayes
 #endif  // NAIVE_BAYES_MODEL_IO_H

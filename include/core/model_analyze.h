@@ -1,5 +1,5 @@
-#ifndef SRC_PROBABILITY_DISCERNER_H
-#define SRC_PROBABILITY_DISCERNER_H
+#ifndef SRC_MODEL_ANALYZE_H
+#define SRC_MODEL_ANALYZE_H
 
 #include <map>
 #include <string>
@@ -38,7 +38,7 @@ const std::string kDefModelWriteReadPath = "../data/datamodel.txt";
 const char kPixelSeparator = ' ';
 const char kCoordSeparator = ',';
 
-class probability_discerner {
+class Model {
  public:
   int num_training_images_;
   // Maps representing class probabilites, raw pixel data, and pixel
@@ -49,7 +49,7 @@ class probability_discerner {
 
 
   // Constructor, initializes datasets
-  probability_discerner();
+  Model();
 
 
   // Stream operator overloads
@@ -58,6 +58,10 @@ class probability_discerner {
   //Overloads the output operator << to help with
   friend std::ostream &operator<<(std::ostream& os,
                                    const std::tuple<int,int,int>& dataValue);
+
+  /**
+   * FILE IO METHODS
+   * */
 
   // Converts data from files to a model for naive bayes algorithm.
   // Takes 2 std::strings that represent the label and data files path.
@@ -77,6 +81,10 @@ class probability_discerner {
 
  private:
   int image_size_;
+
+  /**
+   * DATA ANALYSIS METHODS
+   * */
 
   // method for processing User input from command line
   void ProcessInput(const int &user_choice);
@@ -100,6 +108,30 @@ class probability_discerner {
   // Used when reading from a pre-existing model
   std::vector<std::string> SplitString(const std::string &string,
                                        const char &split_point);
+
+  /**
+   * DATA CLASSIFICATION METHODS
+   */
+
+  // Returns the most likely digit for an image.
+  // Takes an std::map that represents an image as the only parameter.
+  // Returns a value of int that represents what the image most likely is.
+  int GetMostLikelyDigit(std::map<Coordinate,int> &image_set);
+
+  // Checks the probability of a given image being the given digit.
+  // Takes an std::map that represents an image and a digit as parameters.
+  // Returns a double value that represents the probability of the image
+  // being  the  given digit.
+  double GetDigitProbability(const int &digit,
+                             std::map<Coordinate,int> &image_set);
+
+  // Returns the log value of the probability at given parameters.
+  // Takes the digit, color of the pixel and the coordinates as the parameter.
+  // Gets the value specified by the parameters from prob_set and returns the
+  // log of that value.
+  double GetPixelProbability(const int &digit, const int &color,
+                             const Coordinate &coord);
+
 };
 
 
