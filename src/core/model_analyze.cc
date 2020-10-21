@@ -35,7 +35,7 @@ void Model::InitializeDataSet() {
 void Model::InitializeProbabilitySet() {
   class_probabilities_ = map<int, double>();
   probability_set_ = map<int, map<Coordinate, tuple<double, double, double>>>();
-  // for each digit, intitialize each image coordinate to 0 tuple
+  // for each digit, initialize each image coordinate to 0 tuple
   for (int digit = kFirstDigit; digit <= kLastDigit; digit++) {
     map<Coordinate, tuple<double, double, double>> numRepeatance;
     for (int row = 0; row < image_size_; row++) {
