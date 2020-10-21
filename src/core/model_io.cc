@@ -4,10 +4,34 @@
 
 #include "core/model_io.h"
 #include <core/probability_discerner.h>
-
+#include <tuple>
 #include <fstream>
 
 namespace naivebayes {
+std::istream& operator>>(std::istream& is , char color) {
+  switch (color) {
+    case kWhiteChar:
+      return is >> kWhitePixel;
+    case kGrayChar:
+      return is >> kGrayPixel;
+    case kBlackChar:
+      return is >> kBlackPixel;
+    default:
+      throw std::invalid_argument("This data contains an unreadable pixel");
+  }
+}
+
+std::ofstream& operator<<(std::ofstream& os,
+                          const std::tuple<int,int,int>& dataValue) {
+  os << std::get<kBlackIndex>(dataValue);
+  os << kPixelSeparator;
+  os << std::get<kWhiteIndex>(dataValue);
+  os << kPixelSeparator;
+  os << std::get<kGrayIndex>(dataValue);
+  os << kCoordSeparator;
+  return os;
+}
+
 void probability_discerner::ImportData(const std::string &data_path,
                                        const std::string &label_path) {
   std::ifstream train_file(data_path);
@@ -48,27 +72,7 @@ void probability_discerner::ImportData(const std::string &data_path,
   CalculateProbabilities();
 }
 
-bool probability_discerner::WriteModelToFile(const std::string &file_path) {
-  //If the data_set is empty or there are 0 examples then a false is returned.
-  if (data_set_.empty() || num_training_images_ == 0) {
-    return false;
-  }
 
-  std::ofstream output_file;
-  output_file.open(file_path);
-
-  // First line in the file is number of training examples.
-  output_file << num_training_images_ << std::endl;
-
-  for (int digit = kFirstDigit; digit <= kLastDigit; digit++) {
-    // Each line after the first represents each coordinate's corresponding
-    // values in the given digit.
-    output_file << GetDigitString(digit) << std::endl;
-
-  }
-  output_file.close();
-  return true;
-}
 
 bool probability_discerner::ImportModelFromFile(const std::string &file_path) {
   // data_Set and prob_set are reset first.
@@ -83,13 +87,13 @@ bool probability_discerner::ImportModelFromFile(const std::string &file_path) {
   num_training_images_ = std::stoi(line);
   for (int digit = kFirstDigit; digit <= kLastDigit; digit++) {
     std::getline(input_file, line);
-    std::vector<std::string> pairs = SplitString(line, coord_separator_);
+    std::vector<std::string> pairs = SplitString(line, kCoordSeparator);
 
     for (int row = 0; row < image_size_; row++) {
       for (int col = 0; col < image_size_; col++) {
         std::string pixel_data = pairs[col + image_size_ * row];
         std::vector<std::string> bwg_freq =
-            SplitString(pixel_data, pixel_separator_);
+            SplitString(pixel_data, kPixelSeparator);
         int num_white = std::stoi(bwg_freq[0]);
         int num_gray = std::stoi(bwg_freq[1]);
         //int num_black = std::stoi(bwg_freq[2]);
@@ -107,17 +111,31 @@ bool probability_discerner::ImportModelFromFile(const std::string &file_path) {
   return true;
 }
 
-std::istream& operator>>(std::istream& is , char color) {
-  switch (color) {
-    case kWhiteChar:
-      return is >> kWhitePixel;
-    case kGrayChar:
-      return is >> kGrayPixel;
-    case kBlackChar:
-      return is >> kBlackPixel;
-    default:
-      throw std::invalid_argument("This data contains an unreadable pixel");
+bool probability_discerner::WriteModelToFile(const std::string &file_path) {
+  //If the data_set is empty or there are 0 examples then a false is returned.
+  if (data_set_.empty() || num_training_images_ == 0) {
+    return false;
   }
+
+  std::ofstream output_file;
+  output_file.open(file_path);
+
+  // First line in the file is number of training examples.
+  output_file << num_training_images_ << std::endl;
+
+  for (int digit = kFirstDigit; digit <= kLastDigit; digit++) {
+    // Each line after the first represents each coordinate's corresponding
+    // values in the given digit.
+    for (int row = 0; row < image_size_; row++) {
+      for (int col = 0; col < image_size_; col++) {
+        Coordinate coord = std::make_pair(col, row);
+        std::tuple<int,int,int> dataValue =data_set_[digit][coord];
+        output_file << dataValue;
+      }
+    }
+  }
+  output_file.close();
+  return true;
 }
 
 }

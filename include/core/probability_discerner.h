@@ -56,7 +56,7 @@ class probability_discerner {
   // Overloads the input operator >> to input a Color enum instead of a char
   friend std::istream& operator>>(std::istream& is, char color);
   //Overloads the output operator << to help with
-  friend std::ofstream &operator<<(std::ofstream& os,
+  friend std::ostream &operator<<(std::ostream& os,
                                    const std::tuple<int,int,int>& dataValue);
 
   // Converts data from files to a model for naive bayes algorithm.
