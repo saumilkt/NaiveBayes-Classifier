@@ -49,7 +49,7 @@ TEST_CASE("Import Data Tests"){
 
 TEST_CASE("File Writing/ Reading Tests"){
   probability_discerner digit;
-  digit.ImportData("data/trainingimages");
+  digit.ImportData("data/trainingimages data/traininglabels");
 
   SECTION("Check If File Writing/Reading is consistent") {
     digit.WriteModelToFile("data/datamodel.txt");
@@ -73,4 +73,15 @@ TEST_CASE("File Writing/ Reading Tests"){
 
   }
 
+}
+
+TEST_CASE("Image Classification Tests") {
+  digitClassifier digit;
+  digit.ImportData("data/trainingimages data/traininglabels");
+
+  SECTION("Check If Each Digit is at least %70 Correct") {
+    double accuracy = digit.ClassifyImages("data/testimages data/testlabes");
+    double minimum_correct = 0.7;
+    REQUIRE(accuracy >= minimum_correct);
+  }
 }

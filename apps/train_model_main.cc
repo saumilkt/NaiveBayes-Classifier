@@ -5,7 +5,6 @@
 int main(int argc, char* argv[]) {
   naivebayes::Model discerner;
   std::string argument = argv[1];
-  
   if (argument==("train")) {
     discerner.ImportData(argv[2] ,argv[3]);
   } else if (argument==("read")) {

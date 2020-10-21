@@ -87,7 +87,7 @@ class Model {
   // Classifies the given images and prints out the correctnes percentage
   // Takes 2 std::strings that represent the label and data files path.
   // Returns a confusion matrix as described in the assignment sheet.
-  void ClassifyImages(const std::string &file_path,
+  double ClassifyImages(const std::string &file_path,
                                  const std::string &label_path);
 
  private:

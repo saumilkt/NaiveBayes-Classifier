@@ -57,7 +57,7 @@ int Model::GetMostLikelyDigit(std::map<Coordinate ,int> &image_set){
   return digit_highest_prob;
 }
 
-void Model::ClassifyImages(const std::string &file_path,
+double Model::ClassifyImages(const std::string &file_path,
                                                 const std::string &label_path) {
   std::ifstream train_file(file_path);
   std::string line;
@@ -95,5 +95,6 @@ void Model::ClassifyImages(const std::string &file_path,
   // A percentage of how correct the algorithm is printed to inform the user.
   double percentage = 100 * correct_digits/num_test_img;
   std::cout << percentage <<"% accurate" <<std::endl;
+  return percentage;
 }
 } // namespace naivebayes
