@@ -6,6 +6,7 @@
 #include <tuple>
 #include <vector>
 
+#include "model_classify.h"
 #include "model_io.h"
 
 namespace naivebayes {
@@ -78,6 +79,16 @@ class Model {
   // Takes an std::string that represents the file path as the only argument.
   // Returns a boolean that represents if the file reading was succesfull.
   bool ImportModelFromFile(const std::string &file_path);
+
+  /**
+   * MAIN CLASSIFICATION FUNCTION
+   */
+
+  // Classifies the given images and prints out the correctnes percentage
+  // Takes 2 std::strings that represent the label and data files path.
+  // Returns a confusion matrix as described in the assignment sheet.
+  void ClassifyImages(const std::string &file_path,
+                                 const std::string &label_path);
 
  private:
   int image_size_;
