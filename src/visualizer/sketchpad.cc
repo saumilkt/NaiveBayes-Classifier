@@ -1,5 +1,5 @@
 #include <visualizer/sketchpad.h>
-
+#include <vector>
 namespace naivebayes {
 
 namespace visualizer {
@@ -16,24 +16,25 @@ Sketchpad::Sketchpad(const vec2& top_left_corner, size_t num_pixels_per_side,
 void Sketchpad::Draw() const {
   for (size_t row = 0; row < num_pixels_per_side_; ++row) {
     for (size_t col = 0; col < num_pixels_per_side_; ++col) {
-
-      // TODO: Replace the if-statement below with an if-statement that checks
-      // if the pixel at (row, col) is currently shaded
-      if (row * row + col * col <= 20 * 20) {
-        ci::gl::color(ci::Color::gray(0.3f));
-      } else {
-        ci::gl::color(ci::Color("white"));
-      }
-
+      //establishing pixel dimensions
       vec2 pixel_top_left = top_left_corner_ + vec2(col * pixel_side_length_,
                                                     row * pixel_side_length_);
 
       vec2 pixel_bottom_right =
           pixel_top_left + vec2(pixel_side_length_, pixel_side_length_);
       ci::Rectf pixel_bounding_box(pixel_top_left, pixel_bottom_right);
+      //  checks if the Rectf with pixel dimensions of a pixel @ row, col
+      // contains vec2s corresponding to shaded pixels
+      for (std::tuple<vec2,vec2> pixelBounds : shaded_pixels){
+        if (pixel_bounding_box.contains(std::get<0>(pixelBounds)) &&
+           pixel_bounding_box.contains(std::get<1>(pixelBounds))) {
+          ci::gl::color(ci::Color("white"));
+        } else {
+          ci::gl::color(ci::Color::gray(0.3f));
+        }
+      }
 
       ci::gl::drawSolidRect(pixel_bounding_box);
-
       ci::gl::color(ci::Color("black"));
       ci::gl::drawStrokedRect(pixel_bounding_box);
     }
@@ -58,7 +59,9 @@ void Sketchpad::HandleBrush(const vec2& brush_screen_coords) {
         vec2 pixel_bottom_right =
             pixel_top_left + vec2(pixel_side_length_, pixel_side_length_);
         ci::Rectf pixel_bounding_box(pixel_top_left, pixel_bottom_right);
-
+        // Adding pixel bounds to list of shaded pixels
+        shaded_pixels.push_back(
+            std::make_tuple(pixel_top_left,pixel_bottom_right));
         ci::gl::drawSolidRect(pixel_bounding_box);
 
         ci::gl::color(ci::Color("black"));

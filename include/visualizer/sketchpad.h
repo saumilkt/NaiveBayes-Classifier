@@ -2,10 +2,11 @@
 
 #include "cinder/gl/gl.h"
 
+#include <vector>
 namespace naivebayes {
 
 namespace visualizer {
-
+using glm::vec2;
 /**
  * A sketchpad which will be displayed in the Cinder application and respond to
  * mouse events. Furthermore, the sketchpad can output its current state in the
@@ -53,6 +54,9 @@ class Sketchpad {
   glm::vec2 top_left_corner_;
 
   size_t num_pixels_per_side_;
+
+  // List of shaded pixels
+  std::vector<std::tuple<vec2,vec2>> shaded_pixels;
 
   /** Number of screen pixels in the width/height of one sketchpad pixel */
   double pixel_side_length_;
