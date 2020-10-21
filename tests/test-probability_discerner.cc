@@ -1,6 +1,7 @@
-#include <core/probability_discerner.h>
 #include <catch2/catch2.h>
-#include "core/probability_discerner.h"
+#include <core/model_analyze.h>
+
+#include "core/model_analyze.h"
 
 TEST_CASE("Import Data Tests"){
   probability_discerner digit;
