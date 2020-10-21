@@ -36,5 +36,21 @@ double Model::GetPixelProbability(const int &digit, const int &color,
       std::get<kBlackIndex>(probability_set_[digit][coord]);
 }
 
+int Model::GetMostLikelyDigit(std::map<Coordinate ,int> &image_set){
+  double highest_prob = GetDigitProbability(kFirstDigit, image_set);
+  int digit_highest_prob = kFirstDigit;
+  for (int digit = kFirstDigit + 1; digit <= kLastDigit; digit++) {
+    // The probability of each digit is determined and then the highest one
+    // is stored using a variable outside the loop.
+    double digit_prob = GetDigitProbability(digit ,image_set);
 
+    if (digit_prob > highest_prob) {
+      highest_prob = digit_prob;
+      digit_highest_prob = digit;
+    }
+  }
+
+  // Digit with the highest probability is returned.
+  return digit_highest_prob;
+}
 } // namespace naivebayes
