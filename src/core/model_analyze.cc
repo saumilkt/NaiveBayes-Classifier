@@ -1,24 +1,20 @@
-#include <core/probability_discerner.h>
-#include "core/model_io.h"
-#include <fstream>
+#include <core/model_analyze.h>
 #include <map>
 #include <sstream>
 #include <tuple>
-#include <iostream>
-
 
 namespace naivebayes {
 using std::tuple;
 using std::map;
 
-probability_discerner::probability_discerner() {
+Model::Model() {
   num_training_images_ = 0;
   image_size_=0;
   InitializeProbabilitySet();
   InitializeDataSet();
 }
 
-void probability_discerner::InitializeDataSet() {
+void Model::InitializeDataSet() {
   data_set_ = map<int, map<Coordinate, tuple<int, int, int>>>();
   // for each digit, initialize each coordinate to zero tuple
   for (int digit = kFirstDigit; digit <= kLastDigit; digit++) {
@@ -36,7 +32,7 @@ void probability_discerner::InitializeDataSet() {
   }
 }
 
-void probability_discerner::InitializeProbabilitySet() {
+void Model::InitializeProbabilitySet() {
   class_probabilities_ = map<int, double>();
   probability_set_ = map<int, map<Coordinate, tuple<double, double, double>>>();
   // for each digit, intitialize each image coordinate to 0 tuple
@@ -54,7 +50,7 @@ void probability_discerner::InitializeProbabilitySet() {
 
 }
 
-void probability_discerner::CalculateProbabilities() {
+void Model::CalculateProbabilities() {
   for (int digit = kFirstDigit; digit <= kLastDigit; digit++) {
     // Addition of elements of the tuple in any coordinate
     // with same digit will always be the same and reflect the number of
@@ -96,7 +92,7 @@ void probability_discerner::CalculateProbabilities() {
   }
 }
 
-std::vector<std::string> probability_discerner::SplitString(
+std::vector<std::string> Model::SplitString(
     const std::string &string,
     const char &split_point) {
   std::vector<std::string> strings;

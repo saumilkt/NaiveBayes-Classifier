@@ -3,9 +3,11 @@
 //
 
 #include "core/model_io.h"
-#include <core/probability_discerner.h>
-#include <tuple>
+
+#include <core/model_analyze.h>
+
 #include <fstream>
+#include <tuple>
 
 namespace naivebayes {
 std::istream& operator>>(std::istream& is , char color) {
@@ -32,7 +34,7 @@ std::ostream& operator<<(std::ostream& os,
   return os;
 }
 
-void probability_discerner::ImportData(const std::string &data_path,
+void Model::ImportData(const std::string &data_path,
                                        const std::string &label_path) {
   std::ifstream train_file(data_path);
   std::string line;
@@ -74,7 +76,7 @@ void probability_discerner::ImportData(const std::string &data_path,
 
 
 
-bool probability_discerner::ImportModelFromFile(const std::string &file_path) {
+bool Model::ImportModelFromFile(const std::string &file_path) {
   // data_Set and prob_set are reset first.
   InitializeProbabilitySet();
   InitializeDataSet();
@@ -111,7 +113,7 @@ bool probability_discerner::ImportModelFromFile(const std::string &file_path) {
   return true;
 }
 
-bool probability_discerner::WriteModelToFile(const std::string &file_path) {
+bool Model::WriteModelToFile(const std::string &file_path) {
   //If the data_set is empty or there are 0 examples then a false is returned.
   if (data_set_.empty() || num_training_images_ == 0) {
     return false;
