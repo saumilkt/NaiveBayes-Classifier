@@ -77,8 +77,6 @@ class probability_discerner {
 
  private:
   int image_size_;
-  // method for handling the CLI interactions of the program
-  void CommandLineInterface();
 
   // method for processing User input from command line
   void ProcessInput(const int &user_choice);
@@ -94,12 +92,6 @@ class probability_discerner {
   // Calculates the probability of each pixel of each digit using data_set_.
   // Calculates the probability of each pixel and each class and stores them.
   void CalculateProbabilities();
-
-  // Converts the part of the data_set_ associated with a digit to a string.
-  // Takes an int representing a digit as the only parameter.
-  // Returns an std::string that represents data_set_[digit].
-  // Used to write a digit's requisite information to a new model
-  std::string GetDigitString(const int &digit);
 
   // Splits a string into different strings by the given char.
   // Basically is the .split() method in Java strings.
