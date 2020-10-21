@@ -34,6 +34,10 @@ const std::string kDefTrainDataPath = "../data.trainingimages";
 const std::string kDefTrainLabelPath = "../data/traininglabels";
 const std::string kDefModelWriteReadPath = "../data/datamodel.txt";
 
+// formatting for models
+const char kPixelSeparator = ' ';
+const char kCoordSeparator = ',';
+
 class probability_discerner {
  public:
   int num_training_images_;
@@ -43,9 +47,6 @@ class probability_discerner {
   map<int, map<Coordinate, tuple<int, int, int>>> data_set_;
   map<int, map<Coordinate, tuple<double, double, double>>> probability_set_;
 
-  // formatting for models
-  const char pixel_separator_ = ' ';
-  const char coord_separator_ = ',';
 
   // Constructor, initializes datasets
   probability_discerner();
@@ -55,8 +56,8 @@ class probability_discerner {
   // Overloads the input operator >> to input a Color enum instead of a char
   friend std::istream& operator>>(std::istream& is, char color);
   //Overloads the output operator << to help with
-  friend std::ostream& operator<<(std::ostream& os,
-                                  map<Coordinate, tuple<int,int,int>> digit);
+  friend std::ofstream &operator<<(std::ofstream& os,
+                                   const std::tuple<int,int,int>& dataValue);
 
   // Converts data from files to a model for naive bayes algorithm.
   // Takes 2 std::strings that represent the label and data files path.

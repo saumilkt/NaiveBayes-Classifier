@@ -7,11 +7,6 @@
 
 #include <vector>
 namespace naivebayes {
-using std::vector;
-
-struct Image {
-  vector<vector<char>> pixelArray;
-};
 
 const char kWhiteChar = ' ';
 const char kGrayChar = '+';

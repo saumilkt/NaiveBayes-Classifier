@@ -57,7 +57,7 @@ list(APPEND SOURCE_FILES    ${CORE_SOURCE_FILES}
 
 list(APPEND TEST_FILES tests/test-probability_discerner.cc)
 
-add_executable(train-model apps/train_model_main.cc ${CORE_SOURCE_FILES} src/core/colors.cc)
+add_executable(train-model apps/train_model_main.cc ${CORE_SOURCE_FILES} src/core/model_io.cc)
 target_include_directories(train-model PRIVATE include)
 
 ci_make_app(
