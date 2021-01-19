@@ -141,4 +141,7 @@ _deps
 # External projects
 *-prefix/
 
+### Project Training Data ###
+/data
+
 # End of https://www.gitignore.io/api/c++,cmake,clion

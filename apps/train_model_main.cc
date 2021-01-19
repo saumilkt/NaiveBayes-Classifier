@@ -1,13 +1,20 @@
-#include <iostream>
+#include <core/model_analyze.h>
 
-#include <core/rename_this_file.h>
+#include <stdexcept>
 
-// TODO: You may want to change main's signature to take in argc and argv
-int main() {
-  // TODO: Replace this with code that reads the training data, trains a model,
-  // and saves the trained model to a file.
-
-  std::cout << "Welcome to " << naivebayes::Placeholder().GetBestClass()
-            << std::endl;
+int main(int argc, char* argv[]) {
+  naivebayes::Model discerner;
+  std::string argument = argv[1];
+  if (argument==("train")) {
+    discerner.ImportData(argv[2] ,argv[3]);
+  } else if (argument==("read")) {
+    discerner.ImportModelFromFile(argv[2]);
+  } else if (argument==("write")) {
+    discerner.WriteModelToFile(argv[2]);
+  } else if (argument==("classify")) {
+    discerner.ClassifyImages(argv[2] ,argv[3]);
+  } else {
+      throw std::invalid_argument("The command you inputted is not found");
+  }
   return 0;
 }
